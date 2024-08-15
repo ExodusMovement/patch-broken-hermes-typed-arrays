@@ -1,6 +1,6 @@
 {
   "name": "@exodus/patch-broken-hermes-typed-arrays",
-  "version": "0.0.0",
+  "version": "1.0.0-alpha.0",
   "author": "Exodus Movement, Inc.",
   "description": "Fix broken Hermes engine TypedArray implementation for React Native",
   "homepage": "https://github.com/ExodusMovement/patch-broken-hermes-typed-arrays",
