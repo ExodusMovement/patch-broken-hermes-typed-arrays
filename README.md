@@ -40,8 +40,8 @@ i.e. Hermes implementation of `TypedArray` doesn't follow these sections of the 
 
 ## The fix
 
-Overall, this module is just a glorified version of the following this snippet (but with
-`.map`/`.filter` support and safeguards against Hermes updates, to detect if things change).
+Overall, this module is just a glorified version of the following snippet (but with `.map`/`.filter`
+support and safeguards against Hermes updates, to detect if things change).
 
 ```js
 TypedArray.prototype.subarray = function (...args) {
