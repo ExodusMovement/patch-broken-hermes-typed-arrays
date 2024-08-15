@@ -1,6 +1,8 @@
 # `@exodus/patch-broken-hermes-typed-arrays`
 
-Fix broken Hermes engine TypedArray implementation for React Native, simply
+Fix broken Hermes engine TypedArray implementation for React Native
+
+Simply:
 ```js
 import '@exodus/patch-broken-hermes-typed-arrays'
 ```

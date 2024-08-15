@@ -134,4 +134,4 @@
   // We recheck that just in case though
 
   if (areWeBroken().broken) throw new Error('TypedArray patch did not work somewhy!')
-})();
+})()
