@@ -6,7 +6,7 @@
   "homepage": "https://github.com/ExodusMovement/patch-broken-hermes-typed-arrays",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ExodusMovement/patch-broken-hermes-typed-arrays.git"
+    "url": "git+https://github.com/ExodusMovement/patch-broken-hermes-typed-arrays.git"
   },
   "bugs": {
     "url": "https://github.com/ExodusMovement/patch-broken-hermes-typed-arrays/issues"
