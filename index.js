@@ -71,14 +71,26 @@
     return new this.constructor(arr.buffer, arr.byteOffset, arr.byteLength)
   }
 
-  var callTypedArrayCreateWithSizeFromTypedArray = function (arg, typed) {
-    if (!arg.constructor || arg.constructor === typed.constructor) return typed
+  var callTypedArrayCreateCopyWithSizeFromTypedArray = function (instance, typed) {
+    if (!instance.constructor || instance.constructor === typed.constructor) return typed
+    var { constructor } = instance
 
-    // Fast path, non-spec hack for 'buffer'
-    if (arg._isBuffer) return new arg.constructor(typed.buffer, typed.byteOffset, typed.byteLength)
+    // Fast path, non-spec hack for 'buffer' from https://www.npmjs.com/package/buffer
+    if (
+      instance._isBuffer &&
+      constructor.name === 'Buffer' &&
+      Object.hasOwn(constructor, 'TYPED_ARRAY_SUPPORT') && // should not be inherited
+      constructor.TYPED_ARRAY_SUPPORT === true
+    ) {
+      // We are already operating on a just-created copy in `typed`, so we can avoid copying as long
+      // as the child implementation is fine with us calling a different version of the constructor
+      // than expected per spec
+      // We had to double-check that this is not something inheriting Buffer though
+      return new constructor(typed.buffer, typed.byteOffset, typed.byteLength)
+    }
 
     // Copies but this is the only proper way to call the constructor per spec here
-    var A = new arg.constructor(typed.length)
+    var A = new constructor(typed.length)
     var n
     for (n = 0; n < typed.length; n++) A['' + n] = typed[n]
     return A
@@ -87,13 +99,13 @@
   // Refs: https://tc39.es/ecma262/2024/#sec-%typedarray%.prototype.map, step 5
   //    5. Let A be ? TypedArraySpeciesCreate(O, « 𝔽(len) »).
   TypedArray.prototype.map = function (...args) {
-    return callTypedArrayCreateWithSizeFromTypedArray(this, map.apply(this, args))
+    return callTypedArrayCreateCopyWithSizeFromTypedArray(this, map.apply(this, args))
   }
 
   // Refs: https://tc39.es/ecma262/2024/#sec-%typedarray%.prototype.filter, step 9
   //    9. Let A be ? TypedArraySpeciesCreate(O, « 𝔽(captured) »).
   TypedArray.prototype.filter = function (...args) {
-    return callTypedArrayCreateWithSizeFromTypedArray(this, filter.apply(this, args))
+    return callTypedArrayCreateCopyWithSizeFromTypedArray(this, filter.apply(this, args))
   }
 
   // Refs: https://tc39.es/ecma262/2024/#sec-%typedarray%.prototype.slice, step 13
@@ -104,7 +116,7 @@
     // e.g. Uint8Array.prototype.slice.call(Buffer.alloc(10), 2)
     // should return an instance of a child class (i.e. Buffer in this example)
     // _isBuffer fast path is included in the following call
-    return callTypedArrayCreateWithSizeFromTypedArray(this, slice.apply(this, args))
+    return callTypedArrayCreateCopyWithSizeFromTypedArray(this, slice.apply(this, args))
   }
 
   if (areWeBroken().broken) throw new Error('TypedArray patch did not work somewhy!')
