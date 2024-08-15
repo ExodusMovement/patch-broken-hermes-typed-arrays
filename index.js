@@ -17,7 +17,7 @@
     var called = 0
     var ok = true
 
-    function TestArray(...args) {
+    var TestArray = function (...args) {
       called++
       var buf = new Uint8Array(...args)
       Object.setPrototypeOf(buf, TestArray.prototype)
@@ -29,16 +29,16 @@
 
     var arr = new TestArray(1)
     ok &&= called === 1
-    arr.subarray(0)
+    if (arr.subarray(0).constructor !== TestArray) ok = false
     ok &&= called === 2
-    arr.map(() => 1)
+    if (arr.map(() => 1).constructor !== TestArray) ok = false
     ok &&= called === 3
-    arr.filter(() => true)
+    if (arr.filter(() => true).constructor !== TestArray) ok = false
     ok &&= called === 4
-    arr.slice(0)
+    if (arr.slice(0).constructor !== TestArray) ok = false
     ok &&= called === 5
 
-    var broken = arr.subarray(0).constructor !== TestArray || !ok || called !== 6
+    var broken = !ok
     // If `called` is of unexpected value for brokenness -- we can't be sure what is happening
     // For Symbol.species and ArrayBuffer.prototype.resize checks, see patch logic for explanation
     var shouldPatch = broken && called === 1 && !Symbol.species && !ArrayBuffer.prototype.resize
