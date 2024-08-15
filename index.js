@@ -48,16 +48,20 @@
   if (broken && !shouldPatch) throw new Error('Could not patch broken TypedArray')
 
   // Note: does not follow %Symbol.species%, but Hermes doesn't support it anyway
-  // Refs: https://tc39.es/ecma262/#sec-get-%typedarray%-%symbol.species%
+  // Refs: https://tc39.es/ecma262/2024/#sec-get-%typedarray%-%symbol.species%
 
   var TypedArray = Object.getPrototypeOf(Uint8Array)
   var { subarray, map, filter } = TypedArray.prototype
 
-  // Refs: https://tc39.es/ecma262/#sec-%typedarray%.prototype.subarray, step 17
-  //   17. Return ? TypedArraySpeciesCreate(O, argumentsList).
-  // This conforms to 2023 edition
-  // NOTE: step 15 from 2024 edition is ignored and we don't call a 1-argument version
+  // This conforms to 2023 edition, but not 2024 edition with resizable ArrayBuffer instances
   // This is why we are not safe if an engine (1) has broken TypedArrays and (2) implements ArrayBuffer.prototype.resize
+  // The behavior is identical though if the underlying ArrayBuffer is not a resizable one
+  // Refs: https://tc39.es/ecma262/2024/#sec-%typedarray%.prototype.subarray, steps 15-17
+  //   NOTE: step 15 from 2024 edition is ignored and we don't call a 1-argument version
+  //   17. Return ? TypedArraySpeciesCreate(O, argumentsList).
+  // Refs: https://tc39.es/ecma262/2023/#sec-%typedarray%.prototype.subarray, steps 18-19
+  //   18. Let argumentsList be « buffer, 𝔽(beginByteOffset), 𝔽(newLength) ».
+  //   19. Return ? TypedArraySpeciesCreate(O, argumentsList).
   TypedArray.prototype.subarray = function (...args) {
     var arr = subarray.apply(this, args)
     if (!this.constructor || arr.constructor === this.constructor) return arr
@@ -65,7 +69,7 @@
     return new this.constructor(arr.buffer, arr.byteOffset, arr.byteLength)
   }
 
-  // Refs: https://tc39.es/ecma262/#sec-%typedarray%.prototype.map, step 5
+  // Refs: https://tc39.es/ecma262/2024/#sec-%typedarray%.prototype.map, step 5
   //    5. Let A be ? TypedArraySpeciesCreate(O, « 𝔽(len) »).
   TypedArray.prototype.map = function (...args) {
     var arr = map.apply(this, args)
@@ -81,7 +85,7 @@
     return A
   }
 
-  // Refs: https://tc39.es/ecma262/#sec-%typedarray%.prototype.filter, step 9
+  // Refs: https://tc39.es/ecma262/2024/#sec-%typedarray%.prototype.filter, step 9
   //    9. Let A be ? TypedArraySpeciesCreate(O, « 𝔽(captured) »).
   TypedArray.prototype.filter = function (...args) {
     var arr = filter.apply(this, args)
