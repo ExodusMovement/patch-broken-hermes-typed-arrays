@@ -36,6 +36,7 @@ i.e. Hermes implementation of `TypedArray` doesn't follow these sections of the 
  * [ECMAScript® Language Specification, `%TypedArray%.prototype.subarray`](https://tc39.es/ecma262/#sec-%typedarray%.prototype.subarray)
  * [ECMAScript® Language Specification, `%TypedArray%.prototype.map`](https://tc39.es/ecma262/#sec-%typedarray%.prototype.map)
  * [ECMAScript® Language Specification, `%TypedArray%.prototype.filter`](https://tc39.es/ecma262/#sec-%typedarray%.prototype.filter)
+ * [ECMAScript® Language Specification, `%TypedArray%.prototype.slice`](https://tc39.es/ecma262/#sec-%typedarray%.prototype.slice)
 
 ## The fix
 

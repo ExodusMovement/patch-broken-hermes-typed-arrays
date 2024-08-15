@@ -35,8 +35,10 @@
     ok &&= called === 3
     arr.filter(() => true)
     ok &&= called === 4
+    arr.slice(0)
+    ok &&= called === 5
 
-    var broken = arr.subarray(0).constructor !== TestArray || !ok || called !== 5
+    var broken = arr.subarray(0).constructor !== TestArray || !ok || called !== 6
     // If `called` is of unexpected value for brokenness -- we can't be sure what is happening
     // For Symbol.species and ArrayBuffer.prototype.resize checks, see patch logic for explanation
     var shouldPatch = broken && called === 1 && !Symbol.species && !ArrayBuffer.prototype.resize
@@ -51,7 +53,7 @@
   // Refs: https://tc39.es/ecma262/2024/#sec-get-%typedarray%-%symbol.species%
 
   var TypedArray = Object.getPrototypeOf(Uint8Array)
-  var { subarray, map, filter } = TypedArray.prototype
+  var { subarray, map, filter, slice } = TypedArray.prototype
 
   // This conforms to 2023 edition, but not 2024 edition with resizable ArrayBuffer instances
   // This is why we are not safe if an engine (1) has broken TypedArrays and (2) implements ArrayBuffer.prototype.resize
@@ -90,6 +92,27 @@
   TypedArray.prototype.filter = function (...args) {
     var arr = filter.apply(this, args)
     if (!this.constructor || arr.constructor === this.constructor) return arr
+
+    // Fast path, non-spec hack for 'buffer'
+    if (this._isBuffer) return new this.constructor(arr.buffer, arr.byteOffset, arr.byteLength)
+
+    // Copies but this is the only proper way to call the constructor per spec here
+    var A = new this.constructor(arr.length)
+    var n
+    for (n = 0; n < arr.length; n++) A['' + n] = arr[n]
+    return A
+  }
+
+  // Refs: https://tc39.es/ecma262/2024/#sec-%typedarray%.prototype.slice, step 13
+  //   13. Let A be ? TypedArraySpeciesCreate(O, « 𝔽(countBytes) »).
+  TypedArray.prototype.slice = function (...args) {
+    var arr = slice.apply(this, args)
+    if (!this.constructor || arr.constructor === this.constructor) return arr
+
+    // https://www.npmjs.com/package/buffer overrides this method, but let's still add a fast path
+    // TypedArray.prototype.slice can still be called on Buffer:
+    // e.g. Uint8Array.prototype.slice.call(Buffer.alloc(10), 2)
+    // should return an instance of a child class (i.e. Buffer in this example)
 
     // Fast path, non-spec hack for 'buffer'
     if (this._isBuffer) return new this.constructor(arr.buffer, arr.byteOffset, arr.byteLength)
