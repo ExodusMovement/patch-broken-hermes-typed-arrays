@@ -38,6 +38,15 @@
     if (arr.slice(0).constructor !== TestArray) ok = false
     ok &&= called === 5
 
+    if (ok) {
+      // These are expected to be fine, re-check if others are ok,
+      // but don't increase `called` in shouldPatch
+      if (TestArray.of(1, 2).constructor !== TestArray) ok = false
+      ok &&= called === 6
+      if (TestArray.from([0]).constructor !== TestArray) ok = false
+      ok &&= called === 7
+    }
+
     var broken = !ok
     // If `called` is of unexpected value for brokenness -- we can't be sure what is happening
     // For Symbol.species and ArrayBuffer.prototype.resize checks, see patch logic for explanation
@@ -118,6 +127,11 @@
     // _isBuffer fast path is included in the following call
     return callTypedArrayCreateCopyWithSizeFromTypedArray(this, slice.apply(this, args))
   }
+
+  // The four above methods cover all TypedArraySpeciesCreate calls in the spec for ECMAScript 2024
+
+  // TypedArray.from and TypedArray.of which call TypedArrayCreateFromConstructor are fine
+  // We recheck that just in case though
 
   if (areWeBroken().broken) throw new Error('TypedArray patch did not work somewhy!')
 })();
