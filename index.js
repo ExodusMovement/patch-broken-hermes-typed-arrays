@@ -56,7 +56,11 @@
 
   var { broken, shouldPatch } = areWeBroken()
   if (!broken) return
-  if (broken && !shouldPatch) throw new Error('Could not patch broken TypedArray')
+
+  var prefix = '[@exodus/patch-broken-hermes-typed-arrays] TypedArray support looks broken, '
+  var reportNotice =
+    ' Report this to https://github.com/ExodusMovement/patch-broken-hermes-typed-arrays/issues'
+  if (!shouldPatch) throw new Error(`${prefix}but we could not fix it.${reportNotice}`)
 
   // Note: does not follow %Symbol.species%, but Hermes doesn't support it anyway
   // Refs: https://tc39.es/ecma262/2024/#sec-get-%typedarray%-%symbol.species%
@@ -133,5 +137,5 @@
   // TypedArray.from and TypedArray.of which call TypedArrayCreateFromConstructor are fine
   // We recheck that just in case though
 
-  if (areWeBroken().broken) throw new Error('TypedArray patch did not work somewhy!')
+  if (areWeBroken().broken) throw new Error(`${prefix}and patch failed to fix it!${reportNotice}`)
 })()
