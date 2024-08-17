@@ -23,5 +23,22 @@
   "files": [
     "index.js",
     "CHANGELOG.md"
-  ]
+  ],
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "test": "npm run test:node && npm run test:hermes",
+    "test:node": "exodus-test --engine node:pure",
+    "test:jsc": "exodus-test --engine jsc:bundle",
+    "test:hermes": "exodus-test --engine hermes:bundle"
+  },
+  "devDependencies": {
+    "@exodus/eslint-config": "^5.24.0",
+    "@exodus/prettier": "^1.0.0",
+    "@exodus/test": "1.0.0-rc.38",
+    "eslint": "^8.44.0",
+    "hermes-engine-cli": "^0.12.0"
+  },
+  "prettier": "@exodus/prettier",
+  "packageManager": "pnpm@9.7.0+sha512.dc09430156b427f5ecfc79888899e1c39d2d690f004be70e05230b72cb173d96839587545d09429b55ac3c429c801b4dc3c0e002f653830a420fa2dd4e3cf9cf"
 }
