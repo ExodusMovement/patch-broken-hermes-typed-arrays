@@ -49,7 +49,7 @@ support and safeguards against Hermes updates, to detect if things change).
 TypedArray.prototype.subarray = function (...args) {
   var arr = subarray.apply(this, args)
   if (!this.constructor || arr.constructor === this.constructor) return arr
-  return new this.constructor(arr.buffer, arr.byteOffset, arr.byteLength)
+  return new this.constructor(arr.buffer, arr.byteOffset, arr.length)
 }
 ```
 

@@ -77,7 +77,7 @@
     var arr = subarray.apply(this, args)
     if (!this.constructor || arr.constructor === this.constructor) return arr
 
-    return new this.constructor(arr.buffer, arr.byteOffset, arr.byteLength)
+    return new this.constructor(arr.buffer, arr.byteOffset, arr.length)
   }
 
   var callTypedArrayCreateCopyWithSizeFromTypedArray = function (instance, typed) {
@@ -95,7 +95,7 @@
       // as the child implementation is fine with us calling a different version of the constructor
       // than expected per spec
       // We had to double-check that this is not something inheriting Buffer though
-      return new constructor(typed.buffer, typed.byteOffset, typed.byteLength)
+      return new constructor(typed.buffer, typed.byteOffset, typed.length)
     }
 
     // Copies but this is the only proper way to call the constructor per spec here
