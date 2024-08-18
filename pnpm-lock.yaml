@@ -15,8 +15,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0(prettier@3.3.3)
       '@exodus/test':
-        specifier: 1.0.0-rc.38
-        version: 1.0.0-rc.38(hermes-engine-cli@0.12.0)
+        specifier: ^1.0.0-rc.39
+        version: 1.0.0-rc.39(hermes-engine-cli@0.12.0)
       eslint:
         specifier: ^8.44.0
         version: 8.57.0
@@ -506,8 +506,8 @@ packages:
   '@exodus/replay@1.0.0-rc.3':
     resolution: {integrity: sha512-XcT7ShSNnC5NG+TQiVvGdWkn1L6ivtwIgksxAYl8BuZr0QIj24t0Hvws0oyO4dJQs3olA2jHfJzQInrByjgFmg==}
 
-  '@exodus/test@1.0.0-rc.38':
-    resolution: {integrity: sha512-s7LRN8eodboSQSAkZ/8sbWUGtO8fGgxjMTXZ00FHOm+fkkZ+mtF8tFfuuZq49dQLUa51YzDHDrdHyzbk5ThA1w==}
+  '@exodus/test@1.0.0-rc.39':
+    resolution: {integrity: sha512-u/neKS7zRmZYaRXIfz7+Cqg/kL2HixbKCZc9yKIcoMUqyJ9OIMgy2sYYvrPqJWvWTJJFL+TG7lxYWD+4/zi0OQ==}
     engines: {node: ^18.19.0 || ^20.8.0 || >=22.0.0}
     hasBin: true
     peerDependencies:
@@ -2864,7 +2864,7 @@ snapshots:
 
   '@exodus/replay@1.0.0-rc.3': {}
 
-  '@exodus/test@1.0.0-rc.38(hermes-engine-cli@0.12.0)':
+  '@exodus/test@1.0.0-rc.39(hermes-engine-cli@0.12.0)':
     dependencies:
       '@babel/core': 7.25.2
       '@babel/plugin-syntax-typescript': 7.24.7(@babel/core@7.25.2)
