@@ -66,7 +66,7 @@
   // Refs: https://tc39.es/ecma262/2024/#sec-get-%typedarray%-%symbol.species%
 
   var TypedArray = Object.getPrototypeOf(Uint8Array)
-  var { subarray, map, filter, slice } = TypedArray.prototype
+  var { subarray: subarray0, map: map0, filter: filter0, slice: slice0 } = TypedArray.prototype
 
   // This conforms to 2023 edition, but not 2024 edition with resizable ArrayBuffer instances
   // This is why we are not safe if an engine (1) has broken TypedArrays and (2) implements ArrayBuffer.prototype.resize
@@ -77,8 +77,8 @@
   // Refs: https://tc39.es/ecma262/2023/#sec-%typedarray%.prototype.subarray, steps 18-19
   //   18. Let argumentsList be « buffer, 𝔽(beginByteOffset), 𝔽(newLength) ».
   //   19. Return ? TypedArraySpeciesCreate(O, argumentsList).
-  TypedArray.prototype.subarray = function (...args) {
-    var arr = subarray.apply(this, args)
+  TypedArray.prototype.subarray = function subarray(...args) {
+    var arr = subarray0.apply(this, args)
     if (!this.constructor || arr.constructor === this.constructor) return arr
 
     return new this.constructor(arr.buffer, arr.byteOffset, arr.length)
@@ -111,25 +111,25 @@
 
   // Refs: https://tc39.es/ecma262/2024/#sec-%typedarray%.prototype.map, step 5
   //    5. Let A be ? TypedArraySpeciesCreate(O, « 𝔽(len) »).
-  TypedArray.prototype.map = function (...args) {
-    return callTypedArrayCreateCopyWithSizeFromTypedArray(this, map.apply(this, args))
+  TypedArray.prototype.map = function map(...args) {
+    return callTypedArrayCreateCopyWithSizeFromTypedArray(this, map0.apply(this, args))
   }
 
   // Refs: https://tc39.es/ecma262/2024/#sec-%typedarray%.prototype.filter, step 9
   //    9. Let A be ? TypedArraySpeciesCreate(O, « 𝔽(captured) »).
-  TypedArray.prototype.filter = function (...args) {
-    return callTypedArrayCreateCopyWithSizeFromTypedArray(this, filter.apply(this, args))
+  TypedArray.prototype.filter = function filter(...args) {
+    return callTypedArrayCreateCopyWithSizeFromTypedArray(this, filter0.apply(this, args))
   }
 
   // Refs: https://tc39.es/ecma262/2024/#sec-%typedarray%.prototype.slice, step 13
   //   13. Let A be ? TypedArraySpeciesCreate(O, « 𝔽(countBytes) »).
-  TypedArray.prototype.slice = function (...args) {
+  TypedArray.prototype.slice = function slice(...args) {
     // https://www.npmjs.com/package/buffer overrides this method, but let's still use a fast path
     // TypedArray.prototype.slice can still be called on Buffer:
     // e.g. Uint8Array.prototype.slice.call(Buffer.alloc(10), 2)
     // should return an instance of a child class (i.e. Buffer in this example)
     // _isBuffer fast path is included in the following call
-    return callTypedArrayCreateCopyWithSizeFromTypedArray(this, slice.apply(this, args))
+    return callTypedArrayCreateCopyWithSizeFromTypedArray(this, slice0.apply(this, args))
   }
 
   // The four above methods cover all TypedArraySpeciesCreate calls in the spec for ECMAScript 2024
