@@ -118,6 +118,10 @@ console.log(mapped.constructor.name) // 'TestArray' everywhere, but 'Uint16Array
 console.log(mapped.hello()) // throws in Hermes
 ```
 
+## How do Jest-style tests work on Hermes here?
+
+See [`@exodus/test`](https://github.com/ExodusMovement/test)
+
 ## License
 
 [MIT](./LICENSE)
