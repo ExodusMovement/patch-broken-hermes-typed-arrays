@@ -74,11 +74,11 @@ console.log(Buffer.alloc(2).filter(() => true).constructor.name)
 ```
 
 ```console
-% node buftest.0.js                                         
+% node buftest.0.js
 Buffer
 Buffer
 Buffer
-% jsc buftest.0.js 
+% jsc buftest.0.js
 Buffer
 Buffer
 Buffer
@@ -117,6 +117,16 @@ console.log(TestArray.instances) // 2 everywhere, but 1 in Hermes
 console.log(mapped.constructor.name) // 'TestArray' everywhere, but 'Uint16Array' in Hermes
 console.log(mapped.hello()) // throws in Hermes
 ```
+
+## This fix is for TypedArray instances only, other subclassing is not fixed
+
+The same discrepancy applies to other Type 2 subclassing, e.g. `Array` subclassing.
+
+For more info, see this thread and links from it:
+https://github.com/facebook/hermes/issues/1495#issuecomment-2313408361
+
+This patch doesn't attempt to fix all that, only TypedArrays, specifically because
+existing code depends on subclassing them working (example: `Buffer`).
 
 ## How do Jest-style tests work on Hermes here?
 
